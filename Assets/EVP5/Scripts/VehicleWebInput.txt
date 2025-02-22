@@ -1,0 +1,75 @@
+using UnityEngine;
+using System.Collections.Generic;
+
+namespace EVP
+{
+    public class VehicleWebInput : MonoBehaviour
+    {
+        public static VehicleStandardInput Instance; // Singleton
+
+        public VehicleController target;
+
+        void Awake()
+        {
+            Instance = this;
+        }
+
+        void OnEnable()
+        {
+            if (target == null)
+                target = GetComponent<VehicleController>();
+        }
+
+   
+        private float steerInputWS = 0.0f;   // De -1 a 1
+        private float throttleInputWS = 0.0f; // De -1 a 1
+        private float brakeInputWS = 0.0f;
+        private float handbrakeInputWS = 0.0f;
+
+        void FixedUpdate()
+        {
+            if (target == null) return;
+
+     
+            target.steerInput = steerInputWS;
+            target.throttleInput = throttleInputWS;
+            target.brakeInput = brakeInputWS;
+            target.handbrakeInput = handbrakeInputWS;
+        }
+
+       
+        public void UpdateInputFromServer(Dictionary<string, float> inputValues)
+        {
+            if (inputValues.ContainsKey("steer"))
+            {
+               
+                steerInputWS = Mathf.Clamp(inputValues["steer"] / 180.0f, -1.0f, 1.0f);
+            }
+
+            if (inputValues.ContainsKey("power"))
+            {
+            
+                float power = Mathf.Clamp(inputValues["power"] / 100.0f, -1.0f, 1.0f);
+
+                if (power > 0)
+                {
+                    throttleInputWS = power;
+                    brakeInputWS = 0.0f;
+                }
+                else
+                {
+                    throttleInputWS = 0.0f;
+                    brakeInputWS = -power;  
+                }
+            }
+
+            if (inputValues.ContainsKey("handbrake"))
+            {
+                handbrakeInputWS = Mathf.Clamp01(inputValues["handbrake"]);
+            }
+
+            Debug.Log($" Controlo atualizado: Steer={steerInputWS}, Throttle={throttleInputWS}, Brake={brakeInputWS}, Handbrake={handbrakeInputWS}");
+        }
+    }
+}
+
