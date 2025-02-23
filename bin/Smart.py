@@ -343,9 +343,15 @@ class AdvancedLaneDetector:
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
         
         # Detecção da cor laranja (mais flexível com dois intervalos)
-        lower_orange1 = np.array([5, 120, 150])
+        # lower_orange1 = np.array([5, 120, 150])
+        # upper_orange1 = np.array([25, 255, 255])
+        # lower = np.uint8([  0, 200,   0])
+        # upper = np.uint8([255, 255, 255])
+        # lower = np.uint8([ 10,   0, 100])
+        # upper = np.uint8([ 40, 255, 255])
+
+        lower_orange1 = np.array([10, 0, 100])
         upper_orange1 = np.array([25, 255, 255])
-        
         mask1 = cv2.inRange(hsv, lower_orange1, upper_orange1)
         
         # Operações morfológicas para melhorar a máscara

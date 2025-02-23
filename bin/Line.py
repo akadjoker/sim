@@ -510,19 +510,7 @@ class UnityBridge:
         mask = cv2.bitwise_or(white_mask, yellow_mask)
         return cv2.bitwise_and(image, image, mask = mask)    
     
-    def select_orange_yellow(self,image):
-        converted = self.convert_hsv(image)
-        # white color mask
-        lower = np.array([5, 120, 150])
-        upper = np.array([25, 255, 255])
-        white_mask = cv2.inRange(converted, lower, upper)
-        # yellow color mask
-        lower = np.uint8([ 10,   100, 100])
-        upper = np.uint8([ 20, 255, 255])
-        yellow_mask = cv2.inRange(converted, lower, upper)
-        # combine the mask
-        mask = cv2.bitwise_or(white_mask, yellow_mask)
-        return cv2.bitwise_and(image, image, mask = mask)   
+
 
     def apply_smoothing(self,image, kernel_size=15):
         return cv2.GaussianBlur(image, (kernel_size, kernel_size), 0)
